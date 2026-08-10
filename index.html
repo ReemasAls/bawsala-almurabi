@@ -1,0 +1,62 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>معرض تفاعلي 3D | مهارات بوصلة المربي</title>
+<link rel="stylesheet" href="style.css">
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<body class="home3d">
+
+<canvas id="webgl-canvas"></canvas>
+
+<div class="hud">
+  <button id="overviewBtn" class="overview-btn">⟲ نظرة عامة على المعرض</button>
+  <button id="myCertBtn" class="my-cert-btn">🏅 شهادتي</button>
+</div>
+
+<div class="toast" id="toast">هذه المحطة قريباً 🚧</div>
+
+<div class="cert-overlay" id="certOverlay">
+  <div class="cert-card">
+    <div class="cert-content">
+      <div class="cert-corner tl"></div>
+      <div class="cert-corner tr"></div>
+      <div class="cert-corner bl"></div>
+      <div class="cert-corner br"></div>
+
+      <div class="cert-logo-badge"><img src="شعار.png" alt="شعار بوصلة المربي" class="cert-logo"></div>
+
+      <h2 class="cert-title">شهادة اجتياز</h2>
+      <h3 class="cert-subtitle">رحلة المربي الرقمي</h3>
+
+      <div class="cert-wreaths"><span class="cert-line"></span><span class="cert-divider">✦</span><span class="cert-line"></span></div>
+
+      <p class="cert-greeting">مبارك لك</p>
+      <p class="cert-body">لقد أكملت جميع المحطات بنجاح وأنت الآن أقرب لأن تكون</p>
+      <p class="cert-highlight">مربياً رقمياً واعياً</p>
+
+      <div class="cert-badge">🏅</div>
+    </div>
+
+    <div class="cert-actions">
+      <button id="certDownload" class="cert-download">⬇️ تحميل الشهادة PDF</button>
+      <button id="certContinue" class="cert-continue">متابعة</button>
+    </div>
+  </div>
+</div>
+
+<div class="loading" id="loading">
+  <div class="spinner"></div>
+  <p>جارٍ تحميل المعرض التفاعلي…</p>
+</div>
+
+<script type="module" src="app.js"></script>
+
+</body>
