@@ -130,7 +130,7 @@ function makeKioskTexture(station) {
   ctx.strokeStyle = '#ffffff';
   ctx.stroke();
   ctx.fillStyle = '#ffffff';
-  ctx.font = '800 32px Tajawal';
+  ctx.font = '800 34px Tajawal';
   ctx.fillText(station.key, W / 2, 88);
 
   // icon circle
@@ -144,19 +144,21 @@ function makeKioskTexture(station) {
 
   // title
   ctx.fillStyle = NAVY_950;
-  ctx.font = '800 36px Tajawal';
-  const titleLines = wrapText(ctx, station.title, W - 110);
+  ctx.font = '800 44px Tajawal';
+  const titleLines = wrapText(ctx, station.title, W - 100);
   let ty = 300;
-  titleLines.forEach(line => { ctx.fillText(line, W / 2, ty); ty += 46; });
+  titleLines.forEach(line => { ctx.fillText(line, W / 2, ty); ty += 54; });
 
   // desc
   ctx.fillStyle = MUTED;
-  ctx.font = '500 23px Tajawal';
-  ctx.fillText(station.desc, W / 2, ty + 14);
-  ty += 60;
+  ctx.font = '600 28px Tajawal';
+  const descLines = wrapText(ctx, station.desc, W - 100);
+  ty += 12;
+  descLines.forEach(line => { ctx.fillText(line, W / 2, ty); ty += 34; });
+  ty += 26;
 
   // embedded screen
-  const screenY = ty + 30;
+  const screenY = ty;
   const screenH = 100;
   ctx.fillStyle = '#0d1b34';
   roundRectPath(ctx, 55, screenY, W - 110, screenH, 18);
@@ -165,16 +167,16 @@ function makeKioskTexture(station) {
   ctx.strokeStyle = '#dfe4ee';
   ctx.stroke();
   ctx.fillStyle = '#ffffff';
-  ctx.font = '800 28px Tajawal';
+  ctx.font = '800 34px Tajawal';
   ctx.fillText('ابدأ رحلتك 👆', W / 2, screenY + screenH / 2 + 2);
 
   // footer tagline (on colored band)
   const footerCenterY = H - 10 - FOOTER_H / 2;
   ctx.fillStyle = '#ffffff';
-  ctx.font = '700 24px Tajawal';
-  const taglineLines = wrapText(ctx, station.tagline, W - 100);
-  let fy = footerCenterY - ((taglineLines.length - 1) * 17);
-  taglineLines.forEach(line => { ctx.fillText(line, W / 2, fy); fy += 34; });
+  ctx.font = '700 29px Tajawal';
+  const taglineLines = wrapText(ctx, station.tagline, W - 90);
+  let fy = footerCenterY - ((taglineLines.length - 1) * 19);
+  taglineLines.forEach(line => { ctx.fillText(line, W / 2, fy); fy += 38; });
 
   const tex = new THREE.CanvasTexture(canvas);
   tex.anisotropy = 8;
