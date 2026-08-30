@@ -6,13 +6,13 @@ const STATIONS = [
     index: 0, key: '04', title: 'الأمان الرقمي', desc: 'محطة الحماية في العالم الرقمي',
     icon: '🛡️', color: 0xc98a3a, glow: 0xf3b768,
     tagline: 'أمانك الرقمي… مسؤوليتك وحمايتك',
-    soon: true
+    href: 'aman.html'
   },
   {
     index: 1, key: '03', title: 'هل تستطيع تمييز؟', desc: 'محطة الصور الحقيقية وذكاء الاصطناعي',
     icon: '📷', color: 0x6c5b8f, glow: 0xc3aef0,
     tagline: 'العين تبصر… والبصيرة تميز الحقيقة',
-    soon: true
+    href: 'tamyeez.html'
   },
   {
     index: 2, key: '02', title: 'تحقق قبل أن تصدق أي معلومة', desc: 'محطة التحقق من الأخبار',
@@ -24,7 +24,7 @@ const STATIONS = [
     index: 3, key: '01', title: 'فكر لا تنقل أي معلومة', desc: 'محطة التفكير الناقد',
     icon: '💡', color: 0x1f6f6b, glow: 0x5fd6cf,
     tagline: 'لا تكن ناقلاً… كن مفكراً ناقداً تصنع الفرق',
-    soon: true
+    href: 'naqid.html'
   },
 ];
 

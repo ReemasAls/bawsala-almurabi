@@ -379,3 +379,30 @@ body.detail-page{
 .link-btn.secondary:hover{border-color:var(--gold);}
 
 .hint{margin-top:26px;font-size:12px;color:var(--muted);}
+
+/* ---------- Article page (ختامًا) ---------- */
+.detail-wrap.article{max-width:720px;text-align:right;}
+.detail-wrap.article h1,
+.detail-wrap.article .detail-sub{text-align:center;}
+.article-body{
+  background:#ffffff;
+  border:1px solid #dbe3f2;
+  border-radius:22px;
+  padding:36px 32px;
+  box-shadow:0 14px 34px rgba(20,40,80,.1);
+}
+.article-body p{
+  margin:0 0 22px;
+  font-size:16px;
+  line-height:2.1;
+  color:#2c3a55;
+  font-weight:500;
+}
+.article-body p:last-child{margin-bottom:0;}
+.article-quote{
+  text-align:center;
+  font-size:20px;
+  font-weight:800;
+  color:var(--navy-950);
+  padding:6px 0;
+}
