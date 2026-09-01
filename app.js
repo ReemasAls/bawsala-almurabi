@@ -484,12 +484,6 @@ const pulseRings = [0, 1, 2].map(i => {
   return { mesh, offset: i / 3 };
 });
 
-const podium = new THREE.Mesh(
-  new THREE.CylinderGeometry(0.85, 0.95, 0.9, 32),
-  new THREE.MeshStandardMaterial({ color: 0x0e2040, roughness: 0.4 })
-);
-podium.position.set(0, 0.45, -1.7);
-scene.add(podium);
 const podiumFace = new THREE.Mesh(
   new THREE.CircleGeometry(0.85, 32),
   new THREE.MeshBasicMaterial({ map: makePodiumTexture(logoImg), side: THREE.DoubleSide })
@@ -497,6 +491,22 @@ const podiumFace = new THREE.Mesh(
 podiumFace.position.set(0, 1.9, -1.7);
 podiumFace.userData = { isPodium: true };
 scene.add(podiumFace);
+
+const podiumPoleH = podiumFace.position.y - 0.85;
+const podiumPole = new THREE.Mesh(
+  new THREE.CylinderGeometry(0.08, 0.11, podiumPoleH, 20),
+  new THREE.MeshStandardMaterial({ color: 0x0e2040, roughness: 0.4 })
+);
+podiumPole.position.set(0, podiumPoleH / 2, -1.7);
+scene.add(podiumPole);
+
+const podiumFoot = new THREE.Mesh(
+  new THREE.CircleGeometry(0.55, 40),
+  new THREE.MeshBasicMaterial({ color: GOLD, transparent: true, opacity: 0.12 })
+);
+podiumFoot.rotation.x = -Math.PI / 2;
+podiumFoot.position.set(0, 0.02, -1.7);
+scene.add(podiumFoot);
 const PODIUM_LINK = 'https://compass-journey-hub.base44.app/';
 
 const { tex: backdropTex, aspect: backdropAspect } = makeBackdropTexture();
