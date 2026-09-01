@@ -308,6 +308,19 @@ html:has(body.home3d), body.home3d{margin:0;padding:0;overflow:hidden;height:100
 
 .cert-badge{font-size:56px;margin-bottom:0;filter:drop-shadow(0 6px 10px rgba(0,0,0,.35));}
 
+.cert-khitam-link{
+  display:inline-flex;align-items:center;gap:6px;
+  margin-top:14px;
+  padding:8px 18px;
+  border-radius:20px;
+  border:1px solid rgba(224,178,92,.4);
+  color:var(--gold);
+  text-decoration:none;
+  font-size:13px;font-weight:700;
+  transition:background .2s, border-color .2s;
+}
+.cert-khitam-link:hover{background:rgba(224,178,92,.12);border-color:var(--gold);}
+
 .cert-actions{display:flex;flex-direction:column;gap:12px;margin-top:20px;}
 .cert-continue,.cert-download{
   font-family:inherit;font-weight:800;font-size:15px;
