@@ -333,12 +333,6 @@ function makePodiumTexture(logo) {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
 
-  const grad = ctx.createRadialGradient(S / 2, S / 2, 0, S / 2, S / 2, S / 2);
-  grad.addColorStop(0, '#152a52');
-  grad.addColorStop(1, NAVY_900);
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, S, S);
-
   const logoSize = 340;
   const logoY = 260;
   ctx.save();
@@ -484,24 +478,24 @@ const pulseRings = [0, 1, 2].map(i => {
   return { mesh, offset: i / 3 };
 });
 
-const podiumBaseH = 1.0;
+const podiumBaseH = 2.5;
 const podiumBase = new THREE.Mesh(
-  new THREE.CylinderGeometry(0.9, 1.0, podiumBaseH, 32),
+  new THREE.CylinderGeometry(0.95, 1.05, podiumBaseH, 32),
   new THREE.MeshStandardMaterial({ color: 0x0e2040, roughness: 0.4 })
 );
 podiumBase.position.set(0, podiumBaseH / 2, -1.7);
 scene.add(podiumBase);
 
 const podiumFace = new THREE.Mesh(
-  new THREE.CircleGeometry(0.85, 32),
-  new THREE.MeshBasicMaterial({ map: makePodiumTexture(logoImg), side: THREE.DoubleSide })
+  new THREE.PlaneGeometry(1.7, 1.7),
+  new THREE.MeshBasicMaterial({ map: makePodiumTexture(logoImg), transparent: true, side: THREE.DoubleSide })
 );
-podiumFace.position.set(0, podiumBaseH + 0.85, -1.7);
+podiumFace.position.set(0, 1.75, -1.7 + 0.97);
 podiumFace.userData = { isPodium: true };
 scene.add(podiumFace);
 
 const podiumFoot = new THREE.Mesh(
-  new THREE.CircleGeometry(1.15, 40),
+  new THREE.CircleGeometry(1.3, 40),
   new THREE.MeshBasicMaterial({ color: GOLD, transparent: true, opacity: 0.12 })
 );
 podiumFoot.rotation.x = -Math.PI / 2;
