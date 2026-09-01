@@ -35,14 +35,26 @@ const INK = '#eaf0fb';
 const CARD_BG = '#f6f8fc';
 const MUTED = '#7c8aa8';
 
-await Promise.all([
-  document.fonts.load('900 76px Tajawal'),
-  document.fonts.load('800 34px Tajawal'),
-  document.fonts.load('700 34px Tajawal'),
-  document.fonts.load('600 22px Tajawal'),
-  document.fonts.load('500 30px Tajawal'),
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+const [, , logoImg] = await Promise.all([
+  Promise.all([
+    document.fonts.load('900 76px Tajawal'),
+    document.fonts.load('800 34px Tajawal'),
+    document.fonts.load('700 34px Tajawal'),
+    document.fonts.load('600 22px Tajawal'),
+    document.fonts.load('500 30px Tajawal'),
+  ]),
+  document.fonts.ready,
+  loadImage('شعار.png'),
 ]);
-await document.fonts.ready;
 
 function roundRectPath(ctx, x, y, w, h, r) {
   const rr = Math.min(r, w / 2, h / 2);
@@ -312,28 +324,46 @@ function makeBackdropTexture() {
   return { tex, aspect: W / H };
 }
 
-function makePodiumTexture() {
-  const W = 700, H = 500;
+function makePodiumTexture(logo) {
+  const S = 900;
   const canvas = document.createElement('canvas');
-  canvas.width = W; canvas.height = H;
+  canvas.width = S; canvas.height = S;
   const ctx = canvas.getContext('2d');
   ctx.direction = 'rtl';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
 
-  ctx.fillStyle = NAVY_900;
-  ctx.fillRect(0, 0, W, H);
-  ctx.strokeStyle = 'rgba(224,178,92,.4)';
-  ctx.lineWidth = 4;
-  ctx.strokeRect(6, 6, W - 12, H - 12);
+  const grad = ctx.createRadialGradient(S / 2, S / 2, 0, S / 2, S / 2, S / 2);
+  grad.addColorStop(0, '#152a52');
+  grad.addColorStop(1, NAVY_900);
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, S, S);
 
-  ctx.font = '110px "Segoe UI Emoji","Noto Color Emoji",sans-serif';
-  ctx.fillText('🏆', W / 2, 150);
+  const logoSize = 240;
+  const logoY = 230;
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(S / 2, logoY, logoSize / 2, 0, Math.PI * 2);
+  ctx.fillStyle = '#f7f9fd';
+  ctx.fill();
+  ctx.clip();
+  ctx.drawImage(logo, S / 2 - logoSize / 2, logoY - logoSize / 2, logoSize, logoSize);
+  ctx.restore();
+  ctx.lineWidth = 4;
+  ctx.strokeStyle = 'rgba(224,178,92,.5)';
+  ctx.beginPath();
+  ctx.arc(S / 2, logoY, logoSize / 2, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.fillStyle = INK;
+  ctx.font = '600 40px Tajawal';
+  const lines = wrapText(ctx, 'لمزيد من الارتقاء بدورك التربوي', 620);
+  let ty = 470;
+  lines.forEach(line => { ctx.fillText(line, S / 2, ty); ty += 50; });
 
   ctx.fillStyle = GOLD;
-  ctx.font = '800 34px Tajawal';
-  ctx.fillText('أكمل رحلتك', W / 2, 280);
-  ctx.fillText('واحصل على شارة المربي الواعي', W / 2, 330);
+  ctx.font = '800 52px Tajawal';
+  ctx.fillText('اكتشف معنا ↖', S / 2, ty + 40);
 
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
@@ -455,18 +485,20 @@ const pulseRings = [0, 1, 2].map(i => {
 });
 
 const podium = new THREE.Mesh(
-  new THREE.CylinderGeometry(0.62, 0.7, 0.85, 32),
+  new THREE.CylinderGeometry(0.85, 0.95, 0.9, 32),
   new THREE.MeshStandardMaterial({ color: 0x0e2040, roughness: 0.4 })
 );
-podium.position.set(0, 0.42, -1.7);
+podium.position.set(0, 0.45, -1.7);
 scene.add(podium);
 const podiumFace = new THREE.Mesh(
-  new THREE.CircleGeometry(0.6, 32),
-  new THREE.MeshBasicMaterial({ map: makePodiumTexture() })
+  new THREE.CircleGeometry(0.85, 32),
+  new THREE.MeshBasicMaterial({ map: makePodiumTexture(logoImg) })
 );
 podiumFace.rotation.x = -Math.PI / 2;
-podiumFace.position.set(0, 0.855, -1.7);
+podiumFace.position.set(0, 0.91, -1.7);
+podiumFace.userData = { isPodium: true };
 scene.add(podiumFace);
+const PODIUM_LINK = 'https://compass-journey-hub.base44.app/';
 
 const { tex: backdropTex, aspect: backdropAspect } = makeBackdropTexture();
 const backdropH = 9.2;
@@ -691,6 +723,10 @@ function backToOverview() {
 }
 overviewBtn.addEventListener('click', backToOverview);
 
+function selectPodium() {
+  window.open(PODIUM_LINK, '_blank', 'noopener');
+}
+
 function onPointerDown(e) {
   pointerDown = { x: e.clientX, y: e.clientY, t: performance.now() };
 }
@@ -706,10 +742,11 @@ function onPointerUp(e) {
   pointerNDC.x = (e.clientX / innerWidth) * 2 - 1;
   pointerNDC.y = -(e.clientY / innerHeight) * 2 + 1;
   raycaster.setFromCamera(pointerNDC, camera);
-  const hits = raycaster.intersectObjects([...kioskGroups.map(k => k.hit), backdropMesh]);
+  const hits = raycaster.intersectObjects([...kioskGroups.map(k => k.hit), backdropMesh, podiumFace]);
   if (hits.length) {
     const obj = hits[0].object;
     if (obj === backdropMesh) { selectBackdrop(); return; }
+    if (obj === podiumFace) { selectPodium(); return; }
     const entry = kioskGroups.find(k => k.hit === obj);
     if (entry) selectKiosk(entry);
   }
@@ -721,9 +758,9 @@ function onPointerMove(e) {
   pointerNDC.x = (e.clientX / innerWidth) * 2 - 1;
   pointerNDC.y = -(e.clientY / innerHeight) * 2 + 1;
   raycaster.setFromCamera(pointerNDC, camera);
-  const hits = raycaster.intersectObjects([...kioskGroups.map(k => k.hit), backdropMesh]);
+  const hits = raycaster.intersectObjects([...kioskGroups.map(k => k.hit), backdropMesh, podiumFace]);
   renderer.domElement.style.cursor = hits.length ? 'pointer' : (flying ? 'default' : 'grab');
-  hoveredEntry = (hits.length && hits[0].object !== backdropMesh)
+  hoveredEntry = (hits.length && hits[0].object !== backdropMesh && hits[0].object !== podiumFace)
     ? kioskGroups.find(k => k.hit === hits[0].object)
     : null;
 }
