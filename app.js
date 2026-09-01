@@ -339,8 +339,8 @@ function makePodiumTexture(logo) {
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, S, S);
 
-  const logoSize = 240;
-  const logoY = 230;
+  const logoSize = 340;
+  const logoY = 260;
   ctx.save();
   ctx.beginPath();
   ctx.arc(S / 2, logoY, logoSize / 2, 0, Math.PI * 2);
@@ -349,7 +349,7 @@ function makePodiumTexture(logo) {
   ctx.clip();
   ctx.drawImage(logo, S / 2 - logoSize / 2, logoY - logoSize / 2, logoSize, logoSize);
   ctx.restore();
-  ctx.lineWidth = 4;
+  ctx.lineWidth = 5;
   ctx.strokeStyle = 'rgba(224,178,92,.5)';
   ctx.beginPath();
   ctx.arc(S / 2, logoY, logoSize / 2, 0, Math.PI * 2);
@@ -358,7 +358,7 @@ function makePodiumTexture(logo) {
   ctx.fillStyle = INK;
   ctx.font = '600 40px Tajawal';
   const lines = wrapText(ctx, 'لمزيد من الارتقاء بدورك التربوي', 620);
-  let ty = 470;
+  let ty = 500;
   lines.forEach(line => { ctx.fillText(line, S / 2, ty); ty += 50; });
 
   ctx.fillStyle = GOLD;
@@ -484,24 +484,24 @@ const pulseRings = [0, 1, 2].map(i => {
   return { mesh, offset: i / 3 };
 });
 
+const podiumBaseH = 1.0;
+const podiumBase = new THREE.Mesh(
+  new THREE.CylinderGeometry(0.9, 1.0, podiumBaseH, 32),
+  new THREE.MeshStandardMaterial({ color: 0x0e2040, roughness: 0.4 })
+);
+podiumBase.position.set(0, podiumBaseH / 2, -1.7);
+scene.add(podiumBase);
+
 const podiumFace = new THREE.Mesh(
   new THREE.CircleGeometry(0.85, 32),
   new THREE.MeshBasicMaterial({ map: makePodiumTexture(logoImg), side: THREE.DoubleSide })
 );
-podiumFace.position.set(0, 1.9, -1.7);
+podiumFace.position.set(0, podiumBaseH + 0.85, -1.7);
 podiumFace.userData = { isPodium: true };
 scene.add(podiumFace);
 
-const podiumPoleH = podiumFace.position.y - 0.85;
-const podiumPole = new THREE.Mesh(
-  new THREE.CylinderGeometry(0.08, 0.11, podiumPoleH, 20),
-  new THREE.MeshStandardMaterial({ color: 0x0e2040, roughness: 0.4 })
-);
-podiumPole.position.set(0, podiumPoleH / 2, -1.7);
-scene.add(podiumPole);
-
 const podiumFoot = new THREE.Mesh(
-  new THREE.CircleGeometry(0.55, 40),
+  new THREE.CircleGeometry(1.15, 40),
   new THREE.MeshBasicMaterial({ color: GOLD, transparent: true, opacity: 0.12 })
 );
 podiumFoot.rotation.x = -Math.PI / 2;
