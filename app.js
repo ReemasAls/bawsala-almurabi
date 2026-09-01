@@ -492,10 +492,9 @@ podium.position.set(0, 0.45, -1.7);
 scene.add(podium);
 const podiumFace = new THREE.Mesh(
   new THREE.CircleGeometry(0.85, 32),
-  new THREE.MeshBasicMaterial({ map: makePodiumTexture(logoImg) })
+  new THREE.MeshBasicMaterial({ map: makePodiumTexture(logoImg), side: THREE.DoubleSide })
 );
-podiumFace.rotation.x = -Math.PI / 2;
-podiumFace.position.set(0, 0.91, -1.7);
+podiumFace.position.set(0, 1.9, -1.7);
 podiumFace.userData = { isPodium: true };
 scene.add(podiumFace);
 const PODIUM_LINK = 'https://compass-journey-hub.base44.app/';
@@ -511,7 +510,7 @@ backdropMesh.userData = { isBackdrop: true };
 scene.add(backdropMesh);
 
 const kioskGroups = [];
-const xs = [-4.6, -1.6, 1.6, 4.6];
+const xs = [-4.9, -2.15, 2.15, 4.9];
 const CARD_ASPECT = 820 / 560;
 const CARD_W = 1.7;
 const CARD_H = CARD_W * CARD_ASPECT;
