@@ -325,8 +325,8 @@ function makeBackdropTexture(bayanatLogo, murtaqaLogo) {
   ctx.save();
   roundRectPath(ctx, 170, 20, W - 340, 420, 130);
   ctx.clip();
-  drawFlankLogo(murtaqaLogo, 250, 205, 195, 155);
-  drawFlankLogo(bayanatLogo, 425, 205, 135, 155);
+  drawFlankLogo(murtaqaLogo, 290, 130, 160, 110);
+  drawFlankLogo(bayanatLogo, 410, 130, 90, 110);
   ctx.restore();
 
   const tex = new THREE.CanvasTexture(canvas);
