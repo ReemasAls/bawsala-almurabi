@@ -195,6 +195,19 @@ html:has(body.home3d), body.home3d{margin:0;padding:0;overflow:hidden;height:100
 
 .hud{position:fixed;inset:0;pointer-events:none;z-index:5;}
 
+.mute-btn{
+  position:fixed;bottom:18px;right:18px;
+  pointer-events:auto;
+  width:44px;height:44px;
+  background:var(--navy-900);border:1px solid rgba(255,255,255,.18);
+  color:var(--ink);font-size:18px;
+  border-radius:50%;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s, transform .2s;
+}
+.mute-btn:hover{background:var(--gold);color:var(--navy-950);transform:scale(1.06);}
+.mute-btn.muted{opacity:.55;}
+
 .overview-btn{
   position:fixed;top:18px;right:18px;
   pointer-events:auto;

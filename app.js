@@ -44,7 +44,7 @@ function loadImage(src) {
   });
 }
 
-const [, , logoImg] = await Promise.all([
+const [, , logoImg, bayanatLogo, murtaqaLogo] = await Promise.all([
   Promise.all([
     document.fonts.load('900 76px Tajawal'),
     document.fonts.load('800 34px Tajawal'),
@@ -54,6 +54,8 @@ const [, , logoImg] = await Promise.all([
   ]),
   document.fonts.ready,
   loadImage('شعار.png'),
+  loadImage('logo-bayanat-badge.png'),
+  loadImage('logo-murtaqa.png'),
 ]);
 
 function roundRectPath(ctx, x, y, w, h, r) {
@@ -234,7 +236,7 @@ function drawCompassArt(ctx, cx, cy, R) {
   ctx.restore();
 }
 
-function makeBackdropTexture() {
+function makeBackdropTexture(bayanatLogo, murtaqaLogo) {
   const W = 1800, H = 2000;
   const canvas = document.createElement('canvas');
   canvas.width = W; canvas.height = H;
@@ -314,9 +316,14 @@ function makeBackdropTexture() {
   ctx.fillStyle = '#4a5a7a';
   ctx.fillText('مهارات رقمية لبناء جيل واعٍ ومسؤول', W / 2, 320);
 
-  ctx.font = '68px "Segoe UI Emoji","Noto Color Emoji",sans-serif';
-  ctx.fillText('💡', 260, 175);
-  ctx.fillText('🔒', W - 260, 175);
+  function drawFlankLogo(img, cx, cy, maxW, maxH) {
+    if (!img) return;
+    const scale = Math.min(maxW / img.width, maxH / img.height);
+    const w = img.width * scale, h = img.height * scale;
+    ctx.drawImage(img, cx - w / 2, cy - h / 2, w, h);
+  }
+  drawFlankLogo(murtaqaLogo, 235, 245, 190, 130);
+  drawFlankLogo(bayanatLogo, W - 235, 245, 150, 150);
 
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
@@ -516,7 +523,7 @@ podiumFoot.position.set(0, 0.02, -1.7);
 scene.add(podiumFoot);
 const PODIUM_LINK = 'https://compass-journey-hub.base44.app/';
 
-const { tex: backdropTex, aspect: backdropAspect } = makeBackdropTexture();
+const { tex: backdropTex, aspect: backdropAspect } = makeBackdropTexture(bayanatLogo, murtaqaLogo);
 const backdropH = 9.2;
 const backdropMesh = new THREE.Mesh(
   new THREE.PlaneGeometry(backdropH * backdropAspect, backdropH),
@@ -742,6 +749,33 @@ overviewBtn.addEventListener('click', backToOverview);
 function selectPodium() {
   window.open(PODIUM_LINK, '_blank', 'noopener');
 }
+
+/* ---------- Background music ---------- */
+const MUSIC_MUTED_KEY = 'bawsala_music_muted';
+const bgMusic = document.getElementById('bgMusic');
+const muteBtn = document.getElementById('muteBtn');
+let musicMuted = localStorage.getItem(MUSIC_MUTED_KEY) === '1';
+
+function updateMuteBtn() {
+  muteBtn.textContent = musicMuted ? '🔇' : '🔊';
+  muteBtn.classList.toggle('muted', musicMuted);
+}
+updateMuteBtn();
+
+function tryPlayMusic() {
+  if (musicMuted) return;
+  bgMusic.play().catch(() => {});
+}
+tryPlayMusic();
+window.addEventListener('pointerdown', tryPlayMusic, { once: true });
+
+muteBtn.addEventListener('click', () => {
+  musicMuted = !musicMuted;
+  localStorage.setItem(MUSIC_MUTED_KEY, musicMuted ? '1' : '0');
+  updateMuteBtn();
+  if (musicMuted) bgMusic.pause();
+  else bgMusic.play().catch(() => {});
+});
 
 function onPointerDown(e) {
   pointerDown = { x: e.clientX, y: e.clientY, t: performance.now() };
