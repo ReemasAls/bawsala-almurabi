@@ -322,8 +322,12 @@ function makeBackdropTexture(bayanatLogo, murtaqaLogo) {
     const w = img.width * scale, h = img.height * scale;
     ctx.drawImage(img, cx - w / 2, cy - h / 2, w, h);
   }
-  drawFlankLogo(murtaqaLogo, 235, 245, 190, 130);
-  drawFlankLogo(bayanatLogo, W - 235, 245, 150, 150);
+  ctx.save();
+  roundRectPath(ctx, 170, 20, W - 340, 420, 130);
+  ctx.clip();
+  drawFlankLogo(murtaqaLogo, 250, 205, 195, 155);
+  drawFlankLogo(bayanatLogo, 425, 205, 135, 155);
+  ctx.restore();
 
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
